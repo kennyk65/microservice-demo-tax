@@ -8,7 +8,7 @@ MAINTAINER Ken Krueger
 VOLUME /tmp
 
 # Adding the file we just created in the build process as 'app.war'
-ADD /target/spring-cloud-aws-microservice-tax-1.war app.war
+ADD /target/microservice-demo-tax-1.war app.war
 
 # Optional, adds a last modified time to each file.  Not needed here.
 RUN bash -c 'touch /app.war'
