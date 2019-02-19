@@ -1,7 +1,18 @@
 version: 0.1
 
-# This is a configuration file for AWS CodeBuild.  It just runs maven.
+# This is a configuration file for AWS CodeBuild.  
+# It is assuming we are running in a build project based on kennyk65/dockerplusjdk8:latest, which is based on aws/codebuild/docker:17.09.0 plus Java & Maven.
+# The login to DockerHub is so we can push the image at the end.  Build project provides the env variables.
+# It runs maven.  Then builds your Dockerfile.  Then pushes to DockerHub.
+
 phases:
+  install:
+    commands:
+      - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2&
+      - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
+  pre_build:
+    commands:
+      - docker login -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PASSWORD}
   build:
     commands:
       - echo Build started on `date`
