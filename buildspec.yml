@@ -16,11 +16,15 @@ phases:
   build:
     commands:
       - echo Build started on `date`
-      - mvn test
+      - mvn package
   post_build:
     commands:
       - echo Build completed on `date`
-      - mvn package
+      - echo Building the Docker image...          
+      - docker build -t microservice-demo-tax:latest .
+      - echo Pushing the Docker image...
+      - docker tag microservice-demo-tax:latest ${DOCKER_HUB_USER}/microservice-demo-tax:latest
+      - docker push ${DOCKER_HUB_USER}/microservice-demo-tax:latest    
 artifacts:
   files:
     - target/microservice-demo-tax-1.war
